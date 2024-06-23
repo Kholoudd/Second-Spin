@@ -21,6 +21,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailControl = TextEditingController();
   TextEditingController passControl = TextEditingController();
+  String? errorMessage;
   Future<LoginResponse> login(String email, String password) async {
     String? token = await Preference.getToken();
     var response = await http.post(
@@ -38,7 +39,10 @@ class _LoginPageState extends State<LoginPage> {
       Preference.saveToken(loginResponse.data?.token);
       Navigator.pushNamed(context, HomeLayout.routeName);
     }
-    else if(response.statusCode == 401){
+    else if (response.statusCode == 401) {
+      setState(() {
+        errorMessage = "Invalid credentials";
+      });
       return Future.error("Invalid credentials");
     }
     final result = jsonDecode(response.body);
@@ -94,6 +98,9 @@ class _LoginPageState extends State<LoginPage> {
                     asterisk: false,
                     textEditingController: emailControl,
                     validator: (String? value) {
+                      if (errorMessage != null) {
+                        return errorMessage;
+                      }
                       if (value == null || value.trim().isEmpty) {
                         return "Please enter your E-mail address";
                       }
@@ -107,9 +114,6 @@ class _LoginPageState extends State<LoginPage> {
                       // }
                       return null;
                     },
-                    // onSaved:(String? mail){
-                    //   emailControl.text = mail!;
-                    // },
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
@@ -134,6 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                         if (value == null || value.trim().isEmpty) {
                           return "Please enter password";
                         }
+
                         // if(value != passControl.toString()){
                         //   return "Wrong email or password!";
                         // }
@@ -158,9 +163,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   MaterialButton(
                       onPressed: () {
-                        loginValidation();
-                        login(emailControl.text, passControl.text);
-                      },
+    if (formKey.currentState!.validate()) {
+      setState(() {
+        errorMessage = null;
+      });
+      login(emailControl.text, passControl.text);
+    }},
                       child: Buttons(
                         title: 'Login',
                         padd: 15,
@@ -191,12 +199,5 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-  }
-
-  loginValidation() {
-    if (formKey.currentState!.validate()) {
-      // Navigator.pushNamed(context, HomeLayout.routeName);
-    }
-    // formKey.currentState?.save();
   }
 }
