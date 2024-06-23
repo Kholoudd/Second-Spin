@@ -10,14 +10,15 @@ class FavProductDetailsVm {
   }
 
   Future<void> addtofav() async {
-    await apiManager.addToFav(prodcuctData!.id!);
+    FavoritesManager.getInstance().addFav(prodcuctData!.id!);
+    //await apiManager.addToFav(prodcuctData!.id!);
   }
 
   Future<void> removeFromFav() async {
-    FavoritesManager.getInstance().removeFav(prodcuctData!.id!);
+    FavoritesManager.getInstance().removeFav(prodcuctData!.fav_id!);
   }
 
   Future<void> addtoCart() async {
-    FavoritesManager.getInstance().addFav(prodcuctData!.id!);
+    await apiManager.addToCart(prodcuctData!.id!);
   }
 }
