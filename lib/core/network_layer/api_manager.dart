@@ -102,6 +102,7 @@ class Api_Manager {
       var detailsResponse = DetailsResponse.fromJson(result);
       return detailsResponse.data;
     }
+    return null;
   }
 
   static Future<SearchResponse> getSearch(String query) async {
@@ -115,6 +116,7 @@ class Api_Manager {
     var searchResponse = SearchResponse.fromJson(result);
     return searchResponse;
   }
+
   Future<ProdcuctData?> fetchGetProductDetails(int? productId) async {
     String? token = await Preference.getToken();
     final response = await http.get(
@@ -126,14 +128,14 @@ class Api_Manager {
     final decodedResponse = jsonDecode(response.body);
     if (response.statusCode == 200 && decodedResponse["status"] == true) {
       final productDetails =
-      RecycleProductDetailsModel.fromJson(decodedResponse);
+          RecycleProductDetailsModel.fromJson(decodedResponse);
       return productDetails.data;
     } else {
       throw Exception('Failed to load products');
     }
   }
 
-static  Future<List<FavProductList>?> fetchAllFavList() async {
+  static Future<List<FavProductList>?> fetchAllFavList() async {
     String? token = await Preference.getToken();
     final response = await http.get(
         Uri.http(
@@ -150,7 +152,7 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
     }
   }
 
-   Future<CharityData?> getCharities() async {
+  Future<CharityData?> getCharities() async {
     String? token = await Preference.getToken();
     var response = await http.get(
         Uri.parse("http://secondspin.xyz/api/donations/charities"),
@@ -161,8 +163,7 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
     return charitiesResponse;
   }
 
-
-   Future<CategoryList> listCategories() async {
+  Future<CategoryList> listCategories() async {
     String? token = await Preference.getToken();
     var response = await http.get(
         Uri.parse("http://secondspin.xyz/api/categories/allcategories"),
@@ -181,9 +182,11 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
     final decodedResponse = jsonDecode(response.body);
     if (response.statusCode == 201 && decodedResponse['status'] == true) {
       return true;
-    } else
+    } else {
       return false;
+    }
   }
+
   Future<bool> addToCart(int id) async {
     String? token = await Preference.getToken();
     final response = await http.post(
@@ -192,20 +195,28 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
     final decodedResponse = jsonDecode(response.body);
     if (response.statusCode == 201 && decodedResponse['status'] == true) {
       return true;
-    } else
+    } else {
       return false;
+    }
   }
+
   Future<bool> removeFromFav(int id) async {
     String? token = await Preference.getToken();
+    print("=====================================");
+    print("remove from fav id = $id");
+    print("token = $token");
+    print("=====================================");
     final response = await http.post(
         Uri.http(Constants.api_base_URL, "/api/favorites/delete/$id"),
         headers: {"Authorization": "Bearer $token"});
     final decodedResponse = jsonDecode(response.body);
     if (response.statusCode == 200 && decodedResponse['status'] == true) {
       return true;
-    } else
+    } else {
       return false;
+    }
   }
+
   Future<bool> removeFromCart(int id) async {
     String? token = await Preference.getToken();
     final response = await http.post(
@@ -214,9 +225,11 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
     final decodedResponse = jsonDecode(response.body);
     if (response.statusCode == 200 && decodedResponse['status'] == true) {
       return true;
-    } else
+    } else {
       return false;
+    }
   }
+
   Future<List<CartList>?> fetchCartList() async {
     String? token = await Preference.getToken();
     final response = await http.get(
@@ -233,7 +246,6 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
       throw Exception('Failed to load products');
     }
   }
-
 
   //  static Future<EditProfile> editProfile(String email, String password, String name,String image) async {
   //   String? token = await Preference.getToken();
@@ -264,12 +276,14 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
   //
   // }
 
-   Future<GetUserData?> userData() async {
+  Future<GetUserData?> userData() async {
     String? token = await Preference.getToken();
     var response = await http.get(
         Uri.parse("http://secondspin.xyz/api/userprofiles/getuser"),
-        headers: {HttpHeaders.authorizationHeader: "Bearer $token",
-      HttpHeaders.contentTypeHeader: "application/json",});
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer $token",
+          HttpHeaders.contentTypeHeader: "application/json",
+        });
     debugPrint(response.body);
     if (response.statusCode == 200) {
       print('Response Body: ${response.body}');
@@ -291,7 +305,7 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
   //   return picResponse;
   // }
 
-  static Future <void>sendApiRequest() async {
+  static Future<void> sendApiRequest() async {
     try {
       String? token = await Preference.getToken();
       final feedbackuser = feedback.text;
@@ -305,7 +319,10 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
       };
       final response = await dio.post(
         'http://secondspin.xyz/api/userprofiles/feedback',
-        options: Options(headers: headers , followRedirects: true,),
+        options: Options(
+          headers: headers,
+          followRedirects: true,
+        ),
         data: body,
       );
       print('Status code: ${response.statusCode}');
@@ -314,6 +331,7 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
       print('Error: $e');
     }
   }
+
   static void deleteAccount() async {
     String? token = await Preference.getToken();
     final response = await http.post(
@@ -326,6 +344,7 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
       print("error");
     }
   }
+
   static void logOut() async {
     String? token = await Preference.getToken();
     final response = await http.post(
@@ -338,11 +357,14 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
       print("error");
     }
   }
-  static Future <void>sendCheckoutRequest({
-      required String locataionCity , required String locationDetails , required String
-    currentPayment , String ? creditCardN ,
-      String ?  expiryDate , String ? cardCvv }
-      ) async {
+
+  static Future<void> sendCheckoutRequest(
+      {required String locataionCity,
+      required String locationDetails,
+      required String currentPayment,
+      String? creditCardN,
+      String? expiryDate,
+      String? cardCvv}) async {
     try {
       String? token = await Preference.getToken();
       print(locationDetails);
@@ -356,26 +378,26 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      final body =
-      currentPayment == 'cash' ? {
-        'location': locataionCity,
-        'payment_method' : currentPayment,
-        'location_details': locationDetails,
-      }:
-      {
-        'location': locataionCity,
-        'payment_method' : currentPayment,
-        'location_details': locationDetails,
-        'card_number' : creditCardN,
-        'cvv' : cardCvv ,
-        'expiry_date' : expiryDate ,
-      };
+      final body = currentPayment == 'cash'
+          ? {
+              'location': locataionCity,
+              'payment_method': currentPayment,
+              'location_details': locationDetails,
+            }
+          : {
+              'location': locataionCity,
+              'payment_method': currentPayment,
+              'location_details': locationDetails,
+              'card_number': creditCardN,
+              'cvv': cardCvv,
+              'expiry_date': expiryDate,
+            };
       final response = await dio.post(
         'http://secondspin.xyz/api/orders/checkout',
-        options:Options(
-        headers: headers,
-        followRedirects: true,
-      ),
+        options: Options(
+          headers: headers,
+          followRedirects: true,
+        ),
         data: body,
       );
       print('Status code: ${response.statusCode}');
@@ -384,11 +406,12 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
       print('Error: $e');
     }
   }
+
   Future<PaymentData?> fetchPaymentSummary() async {
     String? token = await Preference.getToken();
     final response = await http.get(
         Uri.http(
-          Constants.api_base_URL ,
+          Constants.api_base_URL,
           "/api/orders/paymentSummary",
         ),
         headers: {"Authorization": "Bearer $token"});
@@ -418,5 +441,4 @@ static  Future<List<FavProductList>?> fetchAllFavList() async {
   //     throw Exception('Failed to load products');
   //   }
   // }
-
 }

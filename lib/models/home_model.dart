@@ -15,14 +15,23 @@ class HomeModel {
     );
   }
 }
+
 class Data {
   int? id;
   String? title;
   String? image;
   String? price;
   String? location;
-  bool ? isfav ;
-  Data({this.id, this.title, this.image, this.price, this.location , this.isfav = false});
+  bool? isfav;
+  int? fav_id;
+  Data(
+      {this.id,
+      this.title,
+      this.image,
+      this.price,
+      this.location,
+      this.isfav = false,
+      this.fav_id});
   factory Data.fromjson(Map<String, dynamic> json) {
     return Data(
       id: json["id"],
@@ -30,6 +39,7 @@ class Data {
       image: json["image"],
       price: json["price"],
       location: json["location"],
+      fav_id: json["fav_id"],
     );
   }
 }
