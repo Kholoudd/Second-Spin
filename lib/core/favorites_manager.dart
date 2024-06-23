@@ -45,6 +45,16 @@ class FavoritesManager {
     return data;
   }
 
+  dynamic isFav(dynamic item) {
+    for (int i = 0; i < favs.length; i++) {
+      if (favs[i].product_id == item.id) {
+        item.isfav = true;
+        item.fav_id = favs[i].id;
+      }
+    }
+    return item;
+  }
+
   int? indexOfFavsProduct(int id) {
     for (int i = 0; i < favs.length; i++) {
       if (favs[i].product_id == id) {

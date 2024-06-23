@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:graduation/screens/category/recycle/recycle_product_details/recycle_products_details.dart';
 import 'package:graduation/screens/category/recycle/recycle_products/recycle_product_card.dart';
 import 'package:graduation/screens/category/recycle/view_model/recycl_view_model.dart';
+
 class RecycleViewProducts extends StatefulWidget {
   RecycleViewProducts({super.key});
   @override
@@ -13,17 +13,19 @@ class RecycleViewProducts extends StatefulWidget {
 }
 
 class _RecycleViewProductsState extends State<RecycleViewProducts> {
-  late AllRecyclViewModel recyclVm ;
+  late AllRecyclViewModel recyclVm;
   @override
   void initState() {
     super.initState();
     recyclVm = AllRecyclViewModel();
     futureRecycl();
   }
-  Future<void> futureRecycl ()async{
+
+  Future<void> futureRecycl() async {
     await recyclVm.getAllRecyclProducts();
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -37,29 +39,33 @@ class _RecycleViewProductsState extends State<RecycleViewProducts> {
           style: theme.appBarTheme.titleTextStyle,
         ),
       ),
-      body: recyclVm.allRecyclProductsView == null ? Center(child: CircularProgressIndicator(),):
-      Column(
-        children: [
-          Expanded(
-              child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, childAspectRatio: mediaquary.width*0.0016),
-            itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(
-                      context, Recycle_Product_Details.routeName,
-                    arguments: recyclVm.allRecyclProductsView[index].id as int
-                  );
-                },
-                child: Recycl_Product_card(
-                    recyclVm.allRecyclProductsView[index],
-                  recyclVm,
-                ),
+      body: recyclVm.allRecyclProductsView == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                Expanded(
+                    child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: mediaquary.width * 0.0016),
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                          context, Recycle_Product_Details.routeName,
+                          arguments:
+                              recyclVm.allRecyclProductsView[index].id as int);
+                    },
+                    child: Recycl_Product_card(
+                      recyclVm.allRecyclProductsView[index],
+                      recyclVm,
+                    ),
+                  ),
+                  itemCount: recyclVm.allRecyclProductsView.length,
+                )),
+              ],
             ),
-                itemCount: recyclVm.allRecyclProductsView.length,
-          )),
-        ],
-      ),
     );
   }
 }
