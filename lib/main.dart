@@ -53,9 +53,7 @@ class MyApp extends StatelessWidget {
         All_Favourit_Product.routeName: (context)=> All_Favourit_Product(),
         Favourite_product_details.routeName: (context)=> Favourite_product_details(),
         Recycle_Product_Details.routeName : (context)=> Recycle_Product_Details(),
-        // SearchView.routeName : (context)=> const SearchView(),
         Cart_Chackout.routeName : (context)=> Cart_Chackout(),
-        // SearchItem.routeName : (context)=> const SearchItem(),
         SearchDetails.routeName : (context)=> const SearchDetails(),
         UsedView.routeName : (context)=> const UsedView(),
         UsedCategory.routeName : (context)=> const UsedCategory(),
@@ -63,11 +61,9 @@ class MyApp extends StatelessWidget {
         SellView.routeName : (context)=> const SellView(),
         SellForm.routeName : (context)=> const SellForm(),
         CharityForm.routeName : (context)=> const CharityForm(),
-        EditAccount.routeName : (context)=> EditAccount(),
+        EditAccount.routeName : (context)=> const EditAccount(),
         Settings_Account.routeName: (context)=> Settings_Account(),
-        // FormCamera.routeName : (context)=> const FormCamera(),
-        // CharityCamera.routeName : (context)=> const CharityCamera(),
-        CartUserData.routeName: (context)=> CartUserData()
+        CartUserData.routeName: (context)=> CartUserData(),
 
       },
       home: Splashscreen()

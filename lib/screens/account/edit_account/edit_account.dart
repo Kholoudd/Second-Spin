@@ -1,16 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:graduation/core/network_layer/api_manager.dart';
 import 'package:graduation/models/get_user/Data.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/shared_preference.dart';
-import '../../../models/profile_pic/AddPic.dart';
 import '../../login/buttons.dart';
 import '../../login/text_ff.dart';
 import 'package:http/http.dart' as http;
-// import 'package:path_provider/path_provider.dart';
-// import 'package:path/path.dart' as path;
 
 class EditAccount extends StatefulWidget {
   static const String routeName = "EditAccount";
@@ -23,11 +19,13 @@ class EditAccount extends StatefulWidget {
 class _EditAccountState extends State<EditAccount> {
   TextEditingController nameControl = TextEditingController();
   TextEditingController emailControl = TextEditingController();
-  TextEditingController numberControl = TextEditingController();
   TextEditingController passControl = TextEditingController();
+  String? errorMessage;
 
   var formKey = GlobalKey<FormState>();
   UserData user = UserData();
+  File? selectedImage;
+
   @override
   void initState() {
     super.initState();
@@ -37,15 +35,41 @@ class _EditAccountState extends State<EditAccount> {
 
   Future<void> futureData() async {
     await user.getUser();
-    setState(() {});
+    setState(() {
+      nameControl.text = user.user?.name ?? '';
+      emailControl.text = user.user?.email ?? '';
+    });
   }
 
-  Future getPic() async {
+  Future<void> updateProfileAndPic() async {
+    bool profileUpdated = false;
+    bool picUpdated = false;
+
+    if (formKey.currentState!.validate()) {
+      await editProfile();
+      profileUpdated = true;
+    }
+
+    if (selectedImage != null) {
+      await uploadPic();
+      picUpdated = true;
+    }
+
+    if (profileUpdated && picUpdated) {
+      _showDialog(context, "Profile and picture updated successfully!");
+    } else if (profileUpdated) {
+      _showDialog(context, "Profile updated successfully!");
+    } else if (picUpdated) {
+      _showDialog(context, "Profile picture updated successfully!");
+    }
+  }
+
+  Future<void> uploadPic() async {
     String? token = await Preference.getToken();
     final image = selectedImage?.path;
 
     var uri =
-    Uri.parse("http://www.secondspin.xyz/api/userprofiles/uploadimage");
+        Uri.parse("http://www.secondspin.xyz/api/userprofiles/uploadimage");
 
     var request = http.MultipartRequest('POST', uri)
       ..headers[HttpHeaders.authorizationHeader] = "Bearer $token"
@@ -72,8 +96,7 @@ class _EditAccountState extends State<EditAccount> {
     }
   }
 
-  File? selectedImage;
-  Future editProfile() async {
+  Future<void> editProfile() async {
     String? token = await Preference.getToken();
     final name = nameControl.text;
     final email = emailControl.text;
@@ -88,16 +111,16 @@ class _EditAccountState extends State<EditAccount> {
       ..fields['email'] = email
       ..fields['password'] = password;
 
-    if (selectedImage != null) {
-      request.files
-          .add(await http.MultipartFile.fromPath('image', selectedImage!.path));
-    }
-
     try {
       var response = await request.send();
 
       if (response.statusCode == 201) {
         print("Success");
+      } else if (response.statusCode == 401 || response.statusCode == 302) {
+        setState(() {
+          errorMessage = "Invalid credentials";
+        });
+        return Future.error("Invalid credentials");
       } else {
         print('Failed to edit profile: ${response.statusCode}');
         var responseData = await response.stream.bytesToString();
@@ -193,6 +216,9 @@ class _EditAccountState extends State<EditAccount> {
                           asterisk: false,
                           textEditingController: emailControl,
                           validator: (String? value) {
+                            if (errorMessage != null) {
+                              return errorMessage;
+                            }
                             if (value == null || value.trim().isEmpty) {
                               return "Please enter your E-mail address";
                             }
@@ -203,9 +229,6 @@ class _EditAccountState extends State<EditAccount> {
                             }
                             return null;
                           },
-                          // onSaved: (mail) {
-                          //   mail = emailControl.text;
-                          // },
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.03,
@@ -230,9 +253,6 @@ class _EditAccountState extends State<EditAccount> {
                             }
                             return null;
                           },
-                          // onSaved: (String? pass) {
-                          //   pass = passControl.text;
-                          // }
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.04,
@@ -244,10 +264,12 @@ class _EditAccountState extends State<EditAccount> {
               ),
               MaterialButton(
                   onPressed: () {
-                    validate();
-                    editProfile();
-                    getPic();
-                    _showDialog(context);
+                    if (formKey.currentState!.validate()) {
+                      setState(() {
+                        errorMessage = null;
+                      });
+                      updateProfileAndPic();
+                    }
                   },
                   child: Buttons(title: "Save changes", padd: 18))
             ],
@@ -257,12 +279,6 @@ class _EditAccountState extends State<EditAccount> {
     );
   }
 
-  validate() {
-    if (formKey.currentState!.validate()) {
-      // Navigator.pushNamed(context, HomeLayout.routeName);
-    }
-  }
-
   Future pickImageFromGallery() async {
     final pic = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pic == null) return;
@@ -270,33 +286,16 @@ class _EditAccountState extends State<EditAccount> {
       selectedImage = File(pic.path);
     });
   }
-
-  // Future<void> saveImage(File image) async {
-  //   try {
-  //     final directory = await getApplicationDocumentsDirectory();
-  //     final String fileName = path.basename(image.path);
-  //     final String newPath = path.join(directory.path, fileName);
-  //     final savedImage = await image.copy(newPath);
-  //
-  //     setState(() {
-  //       selectedImage = savedImage;
-  //     });
-  //
-  //     print('Image saved to $newPath');
-  //   } catch (e) {
-  //     print('Error saving image: $e');
-  //   }
-  // }
 }
 
-void _showDialog(BuildContext context) {
+void _showDialog(BuildContext context, String message) {
   showDialog(
       context: context,
       builder: (BuildContext context) {
-        return const AlertDialog(
+        return AlertDialog(
           title: Text(
-            "Profile edited successfully!",
-            style: TextStyle(fontWeight: FontWeight.w900),
+            message,
+            style: const TextStyle(fontWeight: FontWeight.w900),
             textAlign: TextAlign.center,
           ),
         );
