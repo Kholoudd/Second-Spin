@@ -35,6 +35,7 @@ class _Favourite_cardState extends State<Favourite_card> {
                 ),
                 Text(
                   widget.favProducts.title!,
+                  overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyLarge,
                 ),
                 Text(widget.favProducts.price!,

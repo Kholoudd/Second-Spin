@@ -10,12 +10,12 @@ class AddToFavViewModel {
   }
 
   Future<void> addtofav(int id) async {
-    await apiManager.addToFav(id);
+    //await apiManager.addToFav(id);
+    FavoritesManager.getInstance().addFav(id);
   }
 
   Future<void> addtoCart(int id) async {
-    //await apiManager.addToCart(id);
-    FavoritesManager.getInstance().addFav(id);
+    await apiManager.addToCart(id);
   }
 
   Future<void> removeFromFav(int id) async {

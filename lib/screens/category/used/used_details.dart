@@ -72,8 +72,6 @@ class _UsedDetailsState extends State<UsedDetails> {
                                   backgroundColor: Colors.white,
                                   child: GestureDetector(
                                       onTap: () async {
-                                        print("click");
-                                        print(details.detailsData?.isfav);
                                         if (details.detailsData?.isfav ==
                                             false) {
                                           await details.addtofav();
@@ -138,10 +136,13 @@ class _UsedDetailsState extends State<UsedDetails> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            if (details.detailsData?.incart == false) {
-                              await details.addtoCart();
-                              details.detailsData?.incart = true;
-                            }
+                            await details.addtoCart();
+                            details.detailsData?.incart = true;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content:
+                                        Text("Added to cart Successfully")));
+
                             setState(() {});
                           },
                           child: Buttons(

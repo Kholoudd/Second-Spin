@@ -4,7 +4,7 @@ import 'package:graduation/screens/category/recycle/recycle_products/recycle_pro
 import 'package:graduation/screens/category/recycle/view_model/recycl_view_model.dart';
 
 class RecycleViewProducts extends StatefulWidget {
-  RecycleViewProducts({super.key});
+  const RecycleViewProducts({super.key});
   @override
   static const String routeName = "recycle_view_products";
 
@@ -39,8 +39,8 @@ class _RecycleViewProductsState extends State<RecycleViewProducts> {
           style: theme.appBarTheme.titleTextStyle,
         ),
       ),
-      body: recyclVm.allRecyclProductsView == null
-          ? Center(
+      body: recyclVm.allRecyclProductsView.isEmpty
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Column(

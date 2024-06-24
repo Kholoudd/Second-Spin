@@ -147,14 +147,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(
                 height: mediaquary.height * 0.40,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => SuggestionsCard(
-                    homeVm.suggestionsProducts[index],
-                    homeVm,
-                  ),
-                  itemCount: homeVm.suggestionsProducts.length,
-                ),
+                child: homeVm.suggestionsProducts.isEmpty
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => SuggestionsCard(
+                          homeVm.suggestionsProducts[index],
+                          homeVm,
+                        ),
+                        itemCount: homeVm.suggestionsProducts.length,
+                      ),
               ),
             ],
           ),

@@ -154,10 +154,13 @@ class _Recycle_Product_DetailsState extends State<Recycle_Product_Details> {
                           ),
                           child: GestureDetector(
                             onTap: () async {
-                              if (recylePVM.prodcuctData?.incart == false) {
-                                await recylePVM.addtoCart();
-                                recylePVM.prodcuctData?.incart = true;
-                              }
+                              await recylePVM.addtoCart();
+                              recylePVM.prodcuctData?.incart = true;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text("Added to cart Successfully")));
+
                               setState(() {});
                             },
                             child: Container(

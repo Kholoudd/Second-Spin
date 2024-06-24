@@ -14,8 +14,7 @@ import 'package:graduation/models/home_model.dart';
 import 'package:graduation/models/recyle/recycle_product_details_model.dart';
 import 'package:graduation/models/response/AllCategoriesResponse.dart';
 import 'package:graduation/screens/account/account_viwe_screen/account.dart';
-import 'package:graduation/screens/cart/cart_view/cart_user_data.dart';
-import 'package:graduation/screens/home/view_model/view_model.dart';
+
 import 'package:http/http.dart' as http;
 import '../../models/category_list/CategoryList.dart';
 import '../../models/charities_response/CharityData.dart';
