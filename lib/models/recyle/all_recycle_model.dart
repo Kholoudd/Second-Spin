@@ -1,5 +1,5 @@
-class AllRecycleModel{
-  String? message ;
+class AllRecycleModel {
+  String? message;
   bool? status;
   int? code;
   List<AllRecycle>? all_rec;
@@ -14,14 +14,24 @@ class AllRecycleModel{
     );
   }
 }
+
 class AllRecycle {
   int? id;
   String? title;
   String? image;
   String? price;
   String? location;
-  bool? isfav ;
-  AllRecycle({this.id, this.title, this.image, this.price, this.location , this.isfav=false});
+  bool? isfav;
+  int? fav_id;
+
+  AllRecycle(
+      {this.id,
+      this.title,
+      this.image,
+      this.price,
+      this.location,
+      this.isfav = false,
+      this.fav_id});
   factory AllRecycle.fromjson(Map<String, dynamic> json) {
     return AllRecycle(
       id: json["id"],

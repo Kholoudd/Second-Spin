@@ -9,6 +9,8 @@ import '../../layouts/homelayout/homelayout.dart';
 import '../login/login_page.dart';
 import 'package:http/http.dart' as http;
 
+import '../splash/splashscreen.dart';
+
 class RegisterPage extends StatefulWidget {
   static const String routeName = "register";
 
@@ -42,7 +44,11 @@ class _RegisterPageState extends State<RegisterPage> {
       print(response.body);
       var registerResponse = RegisterResponse.fromJson(result);
       Preference.saveToken(registerResponse.data?.token);
-      Navigator.pushNamed(context, HomeLayout.routeName);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        HomeLayout.routeName,
+        ModalRoute.withName(Splashscreen.routeName),
+      );
     }
     final result = jsonDecode(response.body);
     print(response.body);
@@ -133,32 +139,32 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: MediaQuery.of(context).size.height * 0.01,
                   ),
                   TextF(
-                      hint: "*************",
-                      asterisk: !isVisible,
-                      icon: IconButton(
-                          onPressed: () {
-                            isVisible = !isVisible;
-                            setState(() {});
-                          },
-                          icon: isVisible == true
-                              ? const Icon(Icons.visibility_off)
-                              : const Icon(Icons.visibility)),
-                      textEditingController: passControl,
-                      validator: (String? value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return "Please enter password";
-                        }
-                        var regex = RegExp(
-                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
-                        if (!regex.hasMatch(value)) {
-                          return "Invalid Password";
-                        }
-                        return null;
-                      },
-                      // onSaved: (String? pass) {
-                      //   pass = passControl.text;
-                      // }
-                      ),
+                    hint: "*************",
+                    asterisk: !isVisible,
+                    icon: IconButton(
+                        onPressed: () {
+                          isVisible = !isVisible;
+                          setState(() {});
+                        },
+                        icon: isVisible == true
+                            ? const Icon(Icons.visibility_off)
+                            : const Icon(Icons.visibility)),
+                    textEditingController: passControl,
+                    validator: (String? value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter password";
+                      }
+                      var regex = RegExp(
+                          r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$');
+                      if (!regex.hasMatch(value)) {
+                        return "Invalid Password";
+                      }
+                      return null;
+                    },
+                    // onSaved: (String? pass) {
+                    //   pass = passControl.text;
+                    // }
+                  ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),

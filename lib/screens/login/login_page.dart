@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import '../../layouts/homelayout/homelayout.dart';
 import '../../models/loginResponse/LoginResponse.dart';
 import '../register/register_page.dart';
+import '../splash/splashscreen.dart';
 
 class LoginPage extends StatefulWidget {
   static const String routeName = "login";
@@ -23,11 +24,9 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passControl = TextEditingController();
   String? errorMessage;
   Future<LoginResponse> login(String email, String password) async {
-    String? token = await Preference.getToken();
     var response = await http.post(
         Uri.parse("http://secondspin.xyz/api/auth/login"),
         headers: {
-          HttpHeaders.authorizationHeader: "Bearer $token",
           HttpHeaders.contentTypeHeader: "application/json",
         },
         body: jsonEncode(
@@ -37,7 +36,11 @@ class _LoginPageState extends State<LoginPage> {
       print(response.body);
       var loginResponse = LoginResponse.fromJson(result);
       Preference.saveToken(loginResponse.data?.token);
-      Navigator.pushNamed(context, HomeLayout.routeName);
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        HomeLayout.routeName,
+        ModalRoute.withName(Splashscreen.routeName),
+      );
     } else if (response.statusCode == 401) {
       setState(() {
         errorMessage = "Invalid credentials";
@@ -162,8 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                   MaterialButton(
                       onPressed: () {
                         if (formKey.currentState!.validate()) {}
-                          login(emailControl.text, passControl.text);
-
+                        login(emailControl.text, passControl.text);
                       },
                       child: Buttons(
                         title: 'Login',
