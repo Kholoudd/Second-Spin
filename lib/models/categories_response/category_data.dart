@@ -6,19 +6,20 @@
 
 class CategoryData {
   CategoryData({
-      int? id,
-      String? title, 
-      String? image, 
-      String? price, 
-      String? location,
+    int? id,
+    String? title,
+    String? image,
+    String? price,
+    String? location,
     bool? isfav,
-  }){
+    int? fav_id,
+  }) {
     _id = id;
     _title = title;
     _image = image;
     _price = price;
     _location = location;
-}
+  }
 
   CategoryData.fromJson(dynamic json) {
     _id = json['id'];
@@ -33,17 +34,21 @@ class CategoryData {
   String? _price;
   String? _location;
   bool? isfav = false;
-CategoryData copyWith({  int? id,
-  String? title,
-  String? image,
-  String? price,
-  String? location,
-}) => CategoryData(  id: id ?? _id,
-  title: title ?? _title,
-  image: image ?? _image,
-  price: price ?? _price,
-  location: location ?? _location,
-);
+  int? fav_id;
+  CategoryData copyWith({
+    int? id,
+    String? title,
+    String? image,
+    String? price,
+    String? location,
+  }) =>
+      CategoryData(
+        id: id ?? _id,
+        title: title ?? _title,
+        image: image ?? _image,
+        price: price ?? _price,
+        location: location ?? _location,
+      );
   int? get id => _id;
   String? get title => _title;
   String? get image => _image;
@@ -59,5 +64,4 @@ CategoryData copyWith({  int? id,
     map['location'] = _location;
     return map;
   }
-
 }

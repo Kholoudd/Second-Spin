@@ -12,21 +12,21 @@
 
 class DetailsData {
   DetailsData({
-      int? id,
-      String? title, 
-      String? description, 
-      String? image, 
-      String? price, 
-      String? createdAt, 
-      dynamic story, 
-      String? location, 
-      String? locationDetails, 
-      String? category, 
-      String? user,
-    bool? isfav ,
-    bool? incart
-
-  }){
+    int? id,
+    String? title,
+    String? description,
+    String? image,
+    String? price,
+    String? createdAt,
+    dynamic story,
+    String? location,
+    String? locationDetails,
+    String? category,
+    String? user,
+    bool? isfav,
+    bool? incart,
+    int? fav_id,
+  }) {
     _id = id;
     _title = title;
     _description = description;
@@ -38,7 +38,7 @@ class DetailsData {
     _locationDetails = locationDetails;
     _category = category;
     _user = user;
-}
+  }
 
   DetailsData.fromJson(dynamic json) {
     _id = json['id'];
@@ -64,31 +64,35 @@ class DetailsData {
   String? _locationDetails;
   String? _category;
   String? _user;
-  bool? isfav =false;
+  bool? isfav = false;
   bool? incart = false;
-DetailsData copyWith({  int? id,
-  String? title,
-  String? description,
-  String? image,
-  String? price,
-  String? createdAt,
-  dynamic story,
-  String? location,
-  String? locationDetails,
-  String? category,
-  String? user,
-}) => DetailsData(  id: id ?? _id,
-  title: title ?? _title,
-  description: description ?? _description,
-  image: image ?? _image,
-  price: price ?? _price,
-  createdAt: createdAt ?? _createdAt,
-  story: story ?? _story,
-  location: location ?? _location,
-  locationDetails: locationDetails ?? _locationDetails,
-  category: category ?? _category,
-  user: user ?? _user,
-);
+  int? fav_id;
+  DetailsData copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? image,
+    String? price,
+    String? createdAt,
+    dynamic story,
+    String? location,
+    String? locationDetails,
+    String? category,
+    String? user,
+  }) =>
+      DetailsData(
+        id: id ?? _id,
+        title: title ?? _title,
+        description: description ?? _description,
+        image: image ?? _image,
+        price: price ?? _price,
+        createdAt: createdAt ?? _createdAt,
+        story: story ?? _story,
+        location: location ?? _location,
+        locationDetails: locationDetails ?? _locationDetails,
+        category: category ?? _category,
+        user: user ?? _user,
+      );
   int? get id => _id;
   String? get title => _title;
   String? get description => _description;
@@ -116,5 +120,4 @@ DetailsData copyWith({  int? id,
     map['user'] = _user;
     return map;
   }
-
 }

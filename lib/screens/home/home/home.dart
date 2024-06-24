@@ -7,7 +7,7 @@ import '../favourite/all_favourite_product.dart';
 import '../view_model/view_model.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
   static const String routeName = "home";
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -21,13 +21,12 @@ class _HomeScreenState extends State<HomeScreen> {
     homeVm = HomeViewModel();
     futureSuggest();
   }
+
   Future<void> futureSuggest() async {
     await homeVm.getSuggtionsModel();
-    for (int i = 0; i <homeVm.suggestionsProducts.length; i++) {
-      log("${homeVm.suggestionsProducts [i].isfav}");
-    }
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -115,14 +114,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Builder(
                       builder: (BuildContext context) {
                         return Container(
-                            alignment: Alignment.centerLeft,
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(i), fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(20)),
-                           );
+                          alignment: Alignment.centerLeft,
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(i), fit: BoxFit.cover),
+                              borderRadius: BorderRadius.circular(20)),
+                        );
                       },
                     );
                   }).toList(),
@@ -146,16 +145,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              Container(
-                height: mediaquary.height*0.40,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context , index)=> SuggestionsCard(
-                  homeVm.suggestionsProducts[index] ,
-                  homeVm,
-                ),
-                  itemCount: homeVm.suggestionsProducts.length,
-                ),
+              SizedBox(
+                height: mediaquary.height * 0.40,
+                child: homeVm.suggestionsProducts.isEmpty
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => SuggestionsCard(
+                          homeVm.suggestionsProducts[index],
+                          homeVm,
+                        ),
+                        itemCount: homeVm.suggestionsProducts.length,
+                      ),
               ),
             ],
           ),

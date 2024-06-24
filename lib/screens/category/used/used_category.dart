@@ -13,46 +13,48 @@ class UsedCategory extends StatelessWidget {
     var theme = Theme.of(context);
     var args = ModalRoute.of(context)?.settings.arguments as Category;
     return Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: AppBar(
-          title: Text(
-            args.name ?? "",
-            style: theme.appBarTheme.titleTextStyle,
-          ),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(
+          args.name ?? "",
+          style: theme.appBarTheme.titleTextStyle,
         ),
-        body: FutureBuilder(
-            future: Api_Manager.getCategory(args.id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                    child: CircularProgressIndicator(
-                  color: Colors.white,
-                ));
-              }
-              if (snapshot.hasError || snapshot.data == null) {
-                return const Center(
-                    child: Text(
-                  "error",
-                  style: TextStyle(color: Colors.white),
-                ));
-              }
-              var productsList = snapshot.data?.data;
-              return Expanded(
-                  child: GridView.builder(
-                      padding: const EdgeInsets.all(10),
-                      itemCount: productsList?.length ?? 0,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 15,
-                              mainAxisSpacing: 15,
-                              childAspectRatio: 0.7),
-                      itemBuilder: (context, index) => InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, UsedDetails.routeName,
-                                arguments: productsList[index].id as int);
-                          },
-                          child: UsedItem(productsList![index]))));
-            }));
+      ),
+      body: FutureBuilder(
+        future: Api_Manager.getCategory(args.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
+            );
+          }
+          if (snapshot.hasError || snapshot.data == null) {
+            return const Center(
+              child: Text(
+                "error",
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+          var productsList = snapshot.data?.data;
+          return GridView.builder(
+              padding: const EdgeInsets.all(10),
+              itemCount: productsList?.length ?? 0,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 15,
+                  mainAxisSpacing: 15,
+                  childAspectRatio: 0.7),
+              itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, UsedDetails.routeName,
+                        arguments: productsList[index].id as int);
+                  },
+                  child: UsedItem(productsList![index])));
+        },
+      ),
+    );
   }
 }
